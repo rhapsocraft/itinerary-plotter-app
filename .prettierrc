@@ -6,5 +6,6 @@
   "trailingComma": "all",
   "htmlWhitespaceSensitivity": "ignore",
   "endOfLine": "lf",
-  "useTabs": false
+  "useTabs": false,
+  "jsxSingleQuote": false
 }

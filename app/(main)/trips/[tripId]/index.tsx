@@ -1,8 +1,8 @@
 import TripActivity from '@/components/activity/trip-activity';
 import Collapsible from '@/components/collapsible';
-import { IActivity } from '@/core/interfaces/IActivity';
 import { useApi } from '@/hooks/use-api';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import { IActivity } from '@/src/core/interfaces/IActivity';
 import { format, startOfDay } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
 import { groupBy } from 'lodash-es';
@@ -37,9 +37,8 @@ export default function TripView() {
   return (
     <View style={{ flexDirection: 'row', height: '100%' }}>
       <View
+        className="flex"
         style={{
-          flex: 2,
-          flexBasis: 393,
           height: '100%',
           backgroundColor: useThemeColor({}, 'background'),
           paddingBlock: 8,
@@ -56,12 +55,7 @@ export default function TripView() {
             </div>
             <div style={{ flexDirection: 'column' }}>
               {itinerary?.map((itinerary, index) => (
-                <Collapsible
-                  key={`itinerary_${index}`}
-                  header={format(itinerary.date, 'MMM dd, yyyy')}
-                  caretSize={32}
-                  style={{ minHeight: 30, fontSize: 24 }}
-                >
+                <Collapsible key={`itinerary_${index}`} header={format(itinerary.date, 'MMM dd, yyyy')} caretSize={32} className="h-50">
                   {itinerary?.activities.map((activity) => (
                     <TripActivity key={activity.id} activity={activity}></TripActivity>
                   ))}
