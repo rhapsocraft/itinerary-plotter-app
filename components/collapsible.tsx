@@ -7,15 +7,22 @@ interface CollapsibleProps extends React.ComponentProps<'div'> {
   caretSize?: number;
 }
 
-export default function Collapsible({ header, caretSize, children, style }: PropsWithChildren<CollapsibleProps>) {
+export default function Collapsible({ header, caretSize, children, style, className }: PropsWithChildren<CollapsibleProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div style={{}}>
-      <Pressable onPress={() => setIsOpen(!isOpen)}>
-        <div style={{ display: 'flex', flex: 1, justifyContent: 'space-between', ...style }}>
-          <span>{header}</span>
-          <MaterialIcons name="chevron-right" size={caretSize ?? 24} style={{ ...(!isOpen && { transform: 'rotate(90deg)' }) }} />
+      <Pressable onPress={() => setIsOpen(!isOpen)} className={className}>
+        <div className="flex grow-[1] justify-between items-center bg-slate-500 text-slate-50" style={style}>
+          <span className="text-lg font-bold pl-8">{header}</span>
+          <div className="w-[50] flex justify-center align-center">
+            <MaterialIcons
+              name="chevron-right"
+              className="h-min text-slate-50"
+              size={caretSize ?? 32}
+              style={{ ...(!isOpen && { transform: 'rotate(90deg)' }) }}
+            />
+          </div>
         </div>
       </Pressable>
       {isOpen && <View>{children}</View>}

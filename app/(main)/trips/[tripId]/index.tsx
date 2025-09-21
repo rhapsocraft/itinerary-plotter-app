@@ -35,27 +35,24 @@ export default function TripView() {
   }, [activities]);
 
   return (
-    <View style={{ flexDirection: 'row', height: '100%' }}>
+    <View className="flex flex-row h-full">
       <View
-        className="flex"
+        className="flex grow-[1] basis-[393] h-full py-2"
         style={{
-          height: '100%',
           backgroundColor: useThemeColor({}, 'background'),
-          paddingBlock: 8,
-          paddingLeft: 24,
         }}
       >
         {trip && (
           <>
-            <h1>{trip?.displayName}</h1>
+            <h1 className="pl-8 text-3xl font-bold">{trip?.displayName}</h1>
             <div style={{ width: '100%' }}>
               {documents?.map((document) => (
                 <div key={document.id}>{document.displayName}</div>
               ))}
             </div>
-            <div style={{ flexDirection: 'column' }}>
+            <div className="flex-col">
               {itinerary?.map((itinerary, index) => (
-                <Collapsible key={`itinerary_${index}`} header={format(itinerary.date, 'MMM dd, yyyy')} caretSize={32} className="h-50">
+                <Collapsible key={`itinerary_${index}`} header={format(itinerary.date, 'MMM dd, yyyy')} caretSize={32} className="h-[50px] border-b-2 border-slate-600">
                   {itinerary?.activities.map((activity) => (
                     <TripActivity key={activity.id} activity={activity}></TripActivity>
                   ))}
@@ -65,7 +62,7 @@ export default function TripView() {
           </>
         )}
       </View>
-      <View style={{ flex: 3, height: '100%' }}></View>
+      <View className="grow-3 h-full" style={{ flex: 3, height: '100%' }}></View>
     </View>
   );
 }
