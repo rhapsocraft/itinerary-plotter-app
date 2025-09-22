@@ -14,7 +14,7 @@ export default function Collapsible({ header, caretSize, children, style, classN
     <div style={{}}>
       <Pressable onPress={() => setIsOpen(!isOpen)} className={className}>
         <div className="flex grow-[1] justify-between items-center bg-slate-500 text-slate-50" style={style}>
-          <span className="text-lg font-bold pl-8">{header}</span>
+          <span className="uppercase pl-8">{header}</span>
           <div className="w-[50] flex justify-center align-center">
             <MaterialIcons
               name="chevron-right"
