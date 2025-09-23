@@ -11,14 +11,14 @@ export default function Collapsible({ header, caretSize, children, style, classN
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div style={{}}>
+    <>
       <Pressable onPress={() => setIsOpen(!isOpen)} className={className}>
-        <div className="flex grow-[1] justify-between items-center bg-slate-500 text-slate-50" style={style}>
+        <div className="flex grow-[1] justify-between items-center" style={style}>
           <span className="uppercase pl-8">{header}</span>
           <div className="w-[50] flex justify-center align-center">
             <MaterialIcons
               name="chevron-right"
-              className="h-min text-slate-50"
+              className="h-min text-current"
               size={caretSize ?? 32}
               style={{ ...(!isOpen && { transform: 'rotate(90deg)' }) }}
             />
@@ -26,6 +26,6 @@ export default function Collapsible({ header, caretSize, children, style, classN
         </div>
       </Pressable>
       {isOpen && <View>{children}</View>}
-    </div>
+    </>
   );
 }
