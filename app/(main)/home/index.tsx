@@ -1,4 +1,4 @@
-import { useApi } from '@/hooks/use-api';
+import { useApi } from '@/src/hooks/use-api';
 import { Text } from 'react-native';
 
 export default function Home() {

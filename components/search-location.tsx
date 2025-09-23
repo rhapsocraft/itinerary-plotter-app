@@ -1,6 +1,7 @@
-import { usePlacesService } from '@/hooks/maps/use-places-service';
+import { usePlacesService } from '@/src/hooks/maps/use-places-service';
+import { useMap } from '@vis.gl/react-google-maps';
 import { debounce } from 'lodash-es';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, TextInput } from 'react-native';
 
 export function SearchLocation() {
@@ -8,15 +9,13 @@ export function SearchLocation() {
   const [placesResult, setPlacesResult] = useState<google.maps.places.PlaceResult[]>();
   const placesService = usePlacesService();
 
-  const searchCallback = useCallback(
-    debounce((term: string) => setSearchTerm(term), 1000),
-    [searchTerm],
-  );
+  const searchCallback = debounce((term: string) => setSearchTerm(term), 1000);
+
+  const map = useMap();
 
   useEffect(() => {
     if (placesService != null) {
-      placesService.findPlaceFromQuery({ query: searchTerm, fields: ['name', 'place_id'] }, (result) => {
-        console.log('places: ', result);
+      placesService.findPlaceFromQuery({ query: searchTerm, fields: ['name', 'place_id', 'geometry'] }, (result) => {
         setPlacesResult(result ?? []);
       });
     }
@@ -35,7 +34,22 @@ export function SearchLocation() {
         {placesResult?.map((place, index) => (
           <div key={`place_${index}`} className="flex">
             {place.name}
-            <Button title="Goto" onPress={() => {}}></Button>
+            <Button
+              title="Goto"
+              onPress={() => {
+                const location = place.geometry?.location;
+                if (map && location) {
+                  map?.setCenter(location);
+                  const viewport = place.geometry?.viewport;
+
+                  if (viewport) {
+                    map.fitBounds(viewport);
+                  }
+                }
+
+                console.log(place, JSON.stringify(place));
+              }}
+            ></Button>
           </div>
         ))}
       </div>

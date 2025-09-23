@@ -1,4 +1,4 @@
-import { IActivity } from '@/src/core/interfaces/IActivity';
+import { IActivity } from '@/src/interfaces/IActivity';
 import { format } from 'date-fns';
 
 export type ActivityProps = {

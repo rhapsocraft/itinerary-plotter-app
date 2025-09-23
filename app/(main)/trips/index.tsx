@@ -1,5 +1,5 @@
-import { useApi } from '@/hooks/use-api';
-import { useThemeColor } from '@/hooks/use-theme-color';
+import { useApi } from '@/src/hooks/use-api';
+import { useThemeColor } from '@/src/hooks/use-theme-color';
 import { Link } from 'expo-router';
 import { Text, View } from 'react-native';
 
