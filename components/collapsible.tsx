@@ -25,7 +25,7 @@ export default function Collapsible({ header, caretSize, children, style, classN
           </div>
         </div>
       </Pressable>
-      {isOpen && <View>{children}</View>}
+      {isOpen && <View className="relative">{children}</View>}
     </>
   );
 }

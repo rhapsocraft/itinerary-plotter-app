@@ -2,13 +2,13 @@ import { useMapTools } from '@/src/hooks/maps/use-map-tools';
 import { IActivity } from '@/src/interfaces/IActivity';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { format } from 'date-fns';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, TextInput } from 'react-native';
 
 export type ActivityProps = {
   activity: IActivity;
 };
 
-export default function TripActivity({ activity }: ActivityProps) {
+export default function TripActivityForm({ activity }: ActivityProps) {
   const { goTo } = useMapTools();
 
   return (
@@ -24,7 +24,9 @@ export default function TripActivity({ activity }: ActivityProps) {
       </div>
       <div className="h-full pt-3 flex flex-col">
         <div className="flex ml-3 flex-row gap-[1em]">
-          <div className="font-bold whitespace-nowrap w-fit">{activity.displayName}</div>
+          <div className="font-bold whitespace-nowrap w-fit">
+            <TextInput></TextInput>
+          </div>
           <div className="flex flex-row mr-4 ml-auto gap-1">
             <Pressable>
               <div className="p-1.5 flex items-center rounded text-indigo-500 hover:bg-indigo-500 hover:text-white">

@@ -12,7 +12,7 @@ export function WebMap({ center, bounds }: { center?: google.maps.LatLng; bounds
             <SearchLocation center={center} bounds={bounds}></SearchLocation>
           </div>
         </div>
-        <div className="pointer-events-auto h-full h-[340px] min-w-[385px] max-w-[640px] mx-auto mt-auto mb-4 w-full bg-white rounded-xl shadow-md"></div>
+        <div className="pointer-events-auto h-[340px] min-w-[385px] max-w-[640px] mx-auto mt-auto mb-4 w-full bg-white rounded-xl shadow-md"></div>
       </div>
     </div>
   );

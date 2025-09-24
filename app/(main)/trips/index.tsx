@@ -1,11 +1,9 @@
 import { useApi } from '@/src/hooks/use-api';
-import { useThemeColor } from '@/src/hooks/use-theme-color';
 import { Link } from 'expo-router';
 import { Text, View } from 'react-native';
 
 export default function Trips() {
   const { result: trips } = useApi<{ id: string; displayName: string }[]>('/api/v1/trips');
-  const color = useThemeColor({}, 'background');
 
   return (
     <View style={{ padding: 16, gap: 16, flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -18,7 +16,6 @@ export default function Trips() {
               marginBottom: 12,
               flexBasis: 250,
               height: 100,
-              backgroundColor: color,
               fontWeight: 600,
               fontSize: 16,
               maxWidth: 250,

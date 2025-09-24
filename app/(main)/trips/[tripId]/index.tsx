@@ -1,9 +1,8 @@
-import TripActivity from '@/components/activity/trip-activity';
+import TripActivityForm from '@/components/activity/trip-activity-form';
 import Collapsible from '@/components/collapsible';
 import { WebMap } from '@/components/web-map';
 import { useMapTools } from '@/src/hooks/maps/use-map-tools';
 import { useApi } from '@/src/hooks/use-api';
-import { useThemeColor } from '@/src/hooks/use-theme-color';
 import { IActivity } from '@/src/interfaces/IActivity';
 import { ITrip } from '@/src/interfaces/ITrip';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -52,44 +51,61 @@ export default function TripView() {
   }, [activities]);
 
   return (
-    <View className="flex flex-row h-full">
-      <ScrollView
-        className="flex grow-[1] basis-[393] h-full py-2 shadow-md"
-        style={{
-          backgroundColor: useThemeColor({}, 'background'),
-        }}
-      >
+    <View className="flex flex-row h-full text-slate-800 bg-zinc-100">
+      <ScrollView className="flex grow-[1] basis-[393] h-full shadow-md">
         {trip && (
           <>
-            <h1 className="pl-8 text-3xl font-bold pb-4">{trip?.displayName}</h1>
             <article className="pl-8 pb-8">
+              <h1 className="text-3xl font-bold pb-4 py-2">{trip?.displayName}</h1>
               <Pressable
-                className="text-indigo-500 flex flex-row items-center text-xl py-2 w-fit gap-2 rounded text-white"
+                className="text-indigo-500 flex flex-row items-center text-xl py-2 w-fit gap-2 rounded"
                 onPress={() => goTo(trip.centralLocation?.geometry)}
               >
                 <MaterialIcons className="text-current" name="location-pin" size={24}></MaterialIcons>
                 <div>{trip.centralLocation?.name}</div>
               </Pressable>
             </article>
-            <div style={{ width: '100%' }}>
-              {documents?.map((document) => (
-                <div key={document.id}>{document.displayName}</div>
-              ))}
-            </div>
-            <div className="flex-col">
+
+            <article>
+              <div className="mx-4 h-[50px] bg-white rounded-t-xl border-[1px] border-b-0 border-slate-300 px-4 flex flex-row items-center">
+                <div className="text-xl font-bold">Documents</div>
+              </div>
+              <div className="w-full h-[120px] bg-white mb-8  border-y-[1px] border-slate-300">
+                {documents?.map((document) => (
+                  <div key={document.id}>{document.displayName}</div>
+                ))}
+              </div>
+            </article>
+
+            <article className="flex-col">
+              <div className="mx-4 h-[50px] rounded-t-xl px-4 flex flex-row items-center bg-white border-[1px] border-b-0 border-slate-300">
+                <div className="text-xl font-bold">Itinerary</div>
+              </div>
               {itinerary?.map((itinerary, index) => (
                 <Collapsible
                   key={`itinerary_${index}`}
                   header={format(itinerary.date, 'dd MMM yyyy')}
                   caretSize={32}
-                  className="h-[50px] border-b-2 border-slate-600 bg-slate-500 text-slate-50"
+                  className="h-[50px] border-b-[1px] border-slate-600 bg-slate-500 text-slate-50"
                 >
+                  <div className="flex flex-row items-center h-[40px] w-full bg-slate-100  border-b-[1px] border-slate-400 sticky top-0 z-10">
+                    <article className="ml-8 font-semibold">Lorem Ipsum</article>
+                    <Pressable className="text-sm ml-auto mr-4 rounded text-indigo-500 p-1.5 hover:bg-indigo-500 hover:text-white">
+                      <MaterialIcons name="add" className="text-current" size={18}></MaterialIcons>
+                    </Pressable>
+                  </div>
                   {itinerary?.activities.map((activity) => (
-                    <TripActivity key={activity.id} activity={activity}></TripActivity>
+                    <div
+                      key={activity.id}
+                      className="grid grid-cols-[116px_minmax(0,1fr)] h-[140px] text-sm items-center border-slate-400 border-b-[1px]"
+                    >
+                      {/* <TripActivity activity={activity}></TripActivity> */}
+                      <TripActivityForm activity={activity}></TripActivityForm>
+                    </div>
                   ))}
                 </Collapsible>
               ))}
-            </div>
+            </article>
           </>
         )}
       </ScrollView>
