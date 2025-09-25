@@ -5,6 +5,9 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
+    rules: {
+      'jsx-quotes': ['error', 'prefer-double'],
+    },
     ignores: ['dist/*'],
   },
 ]);

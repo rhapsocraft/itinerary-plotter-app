@@ -1,9 +1,10 @@
-import TripActivityForm from '@/components/activity/trip-activity-form';
 import Collapsible from '@/components/collapsible';
+import TripActivityForm from '@/components/trip/trip-activity-form';
+import { TripActivityState } from '@/components/trip/trip-activity-state';
 import { WebMap } from '@/components/web-map';
 import { useMapTools } from '@/src/hooks/maps/use-map-tools';
 import { useApi } from '@/src/hooks/use-api';
-import { IActivity } from '@/src/interfaces/IActivity';
+import { IActivity, IActivityState } from '@/src/interfaces/IActivity';
 import { ITrip } from '@/src/interfaces/ITrip';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useMap } from '@vis.gl/react-google-maps';
@@ -15,11 +16,13 @@ import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 interface IItinerary {
   date: Date;
-  activities: IActivity[];
+  activityStates: IActivityState[];
+  isCreatingActivity?: boolean;
 }
 
 export default function TripView() {
   const map = useMap();
+
   const { goTo } = useMapTools();
   const { tripId } = useLocalSearchParams<{ tripId: string }>();
 
@@ -27,7 +30,7 @@ export default function TripView() {
   const { result: activities } = useApi<IActivity[]>(`/api/v1/trips/${tripId}/activities`);
   const { result: documents } = useApi<{ id: string; displayName: string }[]>(`/api/v1/trips/${tripId}/documents`);
 
-  let [itinerary, setItinerary] = useState<IItinerary[]>([]);
+  const [itinerary, setItinerary] = useState<IItinerary[]>([]);
 
   useEffect(() => {
     if (trip && map) {
@@ -40,14 +43,20 @@ export default function TripView() {
   }, [trip, map]);
 
   useEffect(() => {
-    const newItinerary = Object.entries(groupBy(activities, (activity) => startOfDay(activity.scheduleStart))).map<IItinerary>(
-      ([dateString, activities]) => ({
-        date: new Date(dateString),
-        activities,
-      }),
-    );
+    if (activities) {
+      const newItinerary = Object.entries(groupBy(activities, (activity) => startOfDay(activity.scheduleStart))).map<IItinerary>(
+        ([dateString, activities]) => ({
+          date: new Date(dateString),
+          activityStates:
+            activities.map((activity) => ({
+              activity,
+            })) ?? [],
+          isCreatingActivity: false,
+        }),
+      );
 
-    setItinerary(newItinerary);
+      setItinerary(newItinerary);
+    }
   }, [activities]);
 
   return (
@@ -81,28 +90,47 @@ export default function TripView() {
               <div className="mx-4 h-[50px] rounded-t-xl px-4 flex flex-row items-center bg-white border-[1px] border-b-0 border-slate-300">
                 <div className="text-xl font-bold">Itinerary</div>
               </div>
-              {itinerary?.map((itinerary, index) => (
+              {itinerary?.map((itinerary, itineraryIndex) => (
                 <Collapsible
-                  key={`itinerary_${index}`}
+                  key={`itinerary_${itineraryIndex}`}
                   header={format(itinerary.date, 'dd MMM yyyy')}
                   caretSize={32}
                   className="h-[50px] border-b-[1px] border-slate-600 bg-slate-500 text-slate-50"
                 >
                   <div className="flex flex-row items-center h-[40px] w-full bg-slate-100  border-b-[1px] border-slate-400 sticky top-0 z-10">
                     <article className="ml-8 font-semibold">Lorem Ipsum</article>
-                    <Pressable className="text-sm ml-auto mr-4 rounded text-indigo-500 p-1.5 hover:bg-indigo-500 hover:text-white">
+                    <Pressable
+                      className="text-sm ml-auto mr-4 rounded text-indigo-500 p-1.5 hover:bg-indigo-500 hover:text-white"
+                      onPress={() => {
+                        setItinerary((prevItinerary) => {
+                          prevItinerary[itineraryIndex].isCreatingActivity = true;
+
+                          return [...prevItinerary];
+                        });
+                      }}
+                    >
                       <MaterialIcons name="add" className="text-current" size={18}></MaterialIcons>
                     </Pressable>
                   </div>
-                  {itinerary?.activities.map((activity) => (
-                    <div
-                      key={activity.id}
-                      className="grid grid-cols-[116px_minmax(0,1fr)] h-[140px] text-sm items-center border-slate-400 border-b-[1px]"
-                    >
-                      {/* <TripActivity activity={activity}></TripActivity> */}
-                      <TripActivityForm activity={activity}></TripActivityForm>
+
+                  {itinerary?.activityStates.map((activityState, itineraryIndex) => (
+                    <div key={activityState.activity.id} className="flex flex-col min-h-[120px] text-sm  border-slate-400 border-b-[1px]">
+                      <TripActivityState state={activityState}></TripActivityState>
                     </div>
                   ))}
+                  {itinerary.isCreatingActivity && (
+                    <div className="grid grid-cols-[116px_minmax(0,1fr)] min-h-[140px] text-sm items-center border-slate-400 border-b-[1px]">
+                      <TripActivityForm
+                        onStopEditing={() => {
+                          setItinerary((prevItinerary) => {
+                            prevItinerary[itineraryIndex].isCreatingActivity = false;
+
+                            return [...prevItinerary];
+                          });
+                        }}
+                      ></TripActivityForm>
+                    </div>
+                  )}
                 </Collapsible>
               ))}
             </article>

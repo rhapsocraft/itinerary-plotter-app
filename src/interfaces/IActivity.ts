@@ -6,3 +6,6 @@ export interface IActivity {
   scheduleEnd: string;
   locations: google.maps.places.PlaceResult[];
 }
+export interface IActivityState {
+  activity: IActivity;
+}
